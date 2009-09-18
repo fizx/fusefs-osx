@@ -4,7 +4,7 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{fusefs}
+  s.name = %q{fusefs-osx}
   s.version = "0.7.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
      "ext/fusefs_fuse.c",
      "ext/fusefs_fuse.h",
      "ext/fusefs_lib.c",
-     "fusefs.gemspec",
+     "hello.sh",
      "lib/fusefs.rb",
      "sample/demo.rb",
      "sample/dictfs.rb",

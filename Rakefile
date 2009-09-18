@@ -4,7 +4,7 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "fusefs"
+    gem.name = "fusefs-osx"
     gem.summary = %Q{fusefs}
     gem.description = %Q{Gemified}
     gem.email = "kyle@kylemaxwell.com"
