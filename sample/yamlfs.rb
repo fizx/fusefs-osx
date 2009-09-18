@@ -54,6 +54,10 @@ class YAMLFS < FuseFS::FuseDir
     end
     node.to_s
   end
+  
+  def size(path)
+    read_file(path).size
+  end
 
   # File writing
   def can_write?(path)
@@ -141,12 +145,12 @@ class YAMLFS < FuseFS::FuseDir
 end
 
 if (File.basename($0) == File.basename(__FILE__))
-  if (ARGV.size != 2)
-    puts "Usage: #{$0} <directory> <yamlfile>"
+  if (ARGV.size < 2)
+    puts "Usage: #{$0} <directory> <yamlfile> <options>"
     exit
   end
 
-  dirname, yamlfile = ARGV
+  dirname, yamlfile = ARGV.shift, ARGV.shift
 
   unless File.directory?(dirname)
     puts "Usage: #{dirname} is not a directory."
@@ -158,7 +162,7 @@ if (File.basename($0) == File.basename(__FILE__))
   # Set the root FuseFS
   FuseFS.set_root(root)
 
-  FuseFS.mount_under(dirname)
+  FuseFS.mount_under(dirname, *ARGV)
 
   FuseFS.run # This doesn't return until we're unmounted.
 end

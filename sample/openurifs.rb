@@ -20,8 +20,7 @@ class OpenUriFS < FuseFS::FuseDir
     ! (fn =~ /\./) # Does the last item doesn't contain a '.' ?
   end
   def file?(path)
-    uri = scan_path(path)
-    uri.pop =~ /\./ # Does the last item contain a '.' ?
+    !directory?(path)
   end
   def read_file(path)
     proto, rest = split_path(path)

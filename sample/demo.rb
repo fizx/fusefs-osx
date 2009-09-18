@@ -4,10 +4,10 @@ include FuseFS
 
 root = MetaDir.new
 
-if (ARGV.size != 1)
-  puts "Usage: #{$0} <directory>"
-  exit
-end
+# if (ARGV.size != 1)
+#   puts "Usage: #{$0} <directory>"
+#   exit
+# end
 
 dirname = ARGV.shift
 
@@ -56,6 +56,9 @@ class Counter
     @counter += 1
     @counter.to_s + "\n"
   end
+  def size
+    @counter.to_s.size
+  end
 end
 
 class Randwords
@@ -64,6 +67,9 @@ class Randwords
   end
   def to_s
     @ary[rand(@ary.size)].to_s + "\n"
+  end
+  def size
+    @size ||= @ary.map{|v| v.size}.max
   end
 end
 
@@ -89,6 +95,6 @@ root.mkdir("/#{ENV['USER']}",DirLink.new(ENV['HOME']))
 # Set the root FuseFS
 FuseFS.set_root(root)
 
-FuseFS.mount_under(dirname)
+FuseFS.mount_under(dirname, 'nolocalcaches', *ARGV)
 
 FuseFS.run # This doesn't return until we're unmounted.

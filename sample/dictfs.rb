@@ -1,5 +1,6 @@
 # dictfs.rb
 #
+
 require "rubygems"
 require 'fusefs'
 include FuseFS
