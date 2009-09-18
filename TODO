@@ -1,0 +1,11 @@
+TODO for FuseFS
+===============
+
+- Problem with editors: vim attempts to create and then delete a numbered file.
+  This can be an issue if the filename (all digits) is reported as not valid.
+
+  I am looking for a solution for this, but it's gonna be a pain.
+
+- Tests, more tests, and unit tests!
+
+- Consider FIFOs? We can use FIFOs to mimic TCP internet, if we do this right.

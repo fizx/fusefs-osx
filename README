@@ -1,0 +1,56 @@
+OS X Gotcha
+============
+
+If you're using fusefs with MacFuse on Snow Leopard (and possibly in other
+circumstances), and you get the error:
+
+/usr/local/include/fuse/fuse_compat.h:69:24: error: sys/statfs.h: No such file or directory
+
+Just comment that line out of fuse_compat.h.
+
+FuseFS README
+============
+
+    FuseFS is a library aimed at allowing Ruby programmers to quickly and
+  easily create virtual filesystems with little more than a few lines of code.
+  
+    A "hello world" file system equivalent to the one demonstrated on
+  fuse.sourceforge.org is just 20 lines of code!
+
+    FuseFS is *NOT* a full implementation of the FUSE api. rfuse
+  is designed for that.
+
+
+Requirements
+------------
+
+  * FUSE (http://fuse.sourceforge.org)
+  * Ruby 1.8
+ (* C compiler)
+
+
+Install
+-------
+
+	gem install fizx-fusefs
+
+Usage
+-----
+
+  Some sample ruby filesystems are listed in "sample/"
+
+  When you run a fusefs script, it will listen on a socket indefinitely, so
+  either background the script or open another terminal to mosey around in the
+  filesystem.
+
+  Also, check the API.txt file for more use.
+
+
+License
+-------
+
+  MIT license, in file "LICENSE"
+
+
+Author: Greg Millam <walker@deafcode.com>.
+Port/Maintainer: Kyle Maxwell <kyle@kylemaxwell.com>

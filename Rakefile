@@ -5,13 +5,11 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "fusefs"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{fusefs}
+    gem.description = %Q{Gemified}
     gem.email = "kyle@kylemaxwell.com"
     gem.homepage = "http://github.com/fizx/fusefs"
     gem.authors = ["Kyle Maxwell"]
-    gem.add_development_dependency "thoughtbot-shoulda"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
