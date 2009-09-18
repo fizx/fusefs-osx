@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
      "ext/fusefs_fuse.c",
      "ext/fusefs_fuse.h",
      "ext/fusefs_lib.c",
+     "fusefs-osx.gemspec",
      "hello.sh",
      "lib/fusefs.rb",
      "sample/demo.rb",
