@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.date = %q{2009-09-18}
   s.description = %q{Gemified}
   s.email = %q{kyle@kylemaxwell.com}
+  s.extensions = ["ext/extconf.rb"]
   s.extra_rdoc_files = [
     "LICENSE",
      "README"
@@ -27,15 +28,11 @@ Gem::Specification.new do |s|
      "TODO",
      "VERSION",
      "ext/MANIFEST",
-     "ext/Makefile",
      "ext/extconf.rb",
      "ext/fusefs_fuse.c",
      "ext/fusefs_fuse.h",
-     "ext/fusefs_fuse.o",
-     "ext/fusefs_lib.bundle",
      "ext/fusefs_lib.c",
-     "ext/fusefs_lib.o",
-     "ext/mkmf.log",
+     "fusefs.gemspec",
      "lib/fusefs.rb",
      "sample/demo.rb",
      "sample/dictfs.rb",

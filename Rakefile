@@ -10,6 +10,7 @@ begin
     gem.email = "kyle@kylemaxwell.com"
     gem.homepage = "http://github.com/fizx/fusefs"
     gem.authors = ["Kyle Maxwell"]
+    gem.extensions = ["ext/extconf.rb"]
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"

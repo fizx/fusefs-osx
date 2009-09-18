@@ -3,3 +3,7 @@
 coverage
 rdoc
 pkg
+*.o
+*.bundle
+*.log
+Makefile

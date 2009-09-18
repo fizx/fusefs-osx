@@ -10,14 +10,18 @@ module FuseFS
   @running = true
   def FuseFS.run
     fd = FuseFS.fuse_fd
-    io = IO.for_fd(fd)
+    begin
+      io = IO.for_fd(fd)
+    rescue Errno::EBADF
+      raise "fuse is not mounted"
+    end
     while @running
       IO.select([io])
       FuseFS.process
     end
   end
   def FuseFS.unmount
-    system("fusermount -u #{@mountpoint}")
+    system("umount #{@mountpoint}")
   end
   def FuseFS.exit
     @running = false
@@ -83,7 +87,7 @@ module FuseFS
         @subdirs[base].file?(rest)
       end
     end
-
+    
     # File Reading
     def read_file(path)
       base, rest = split_path(path)
@@ -98,7 +102,24 @@ module FuseFS
         @subdirs[base].read_file(rest)
       end
     end
-
+    
+    # File sizing
+    def size(path)
+      base, rest = split_path(path)
+      case
+      when base.nil?
+        0
+      when rest.nil?
+        obj = @files[base]
+        obj.respond_to?(:size) ? obj.size : 0
+      when ! @subdirs.has_key?(base)
+        0
+      else
+        dir = @subdirs[base]
+        dir.respond_to?(:size) ? dir.size(rest) : 0
+      end
+    end
+    
     # Write to a file
     def can_write?(path)
       return false unless Process.uid == FuseFS.reader_uid

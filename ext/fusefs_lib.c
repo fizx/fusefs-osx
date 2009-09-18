@@ -6,7 +6,7 @@
 
 /* #define DEBUG /* */
 
-#define FUSE_USE_VERSION 22
+#define FUSE_USE_VERSION 26
 #define _FILE_OFFSET_BITS 64
 
 #include <fuse.h>
@@ -280,9 +280,8 @@ rf_getattr(const char *path, struct stat *stbuf) {
 
   /* "/" is automatically a dir. */
   if (strcmp(path,"/") == 0) {
-    stbuf->st_mode = S_IFDIR | 0555;
-    stbuf->st_size = 4096;
-    stbuf->st_nlink = 1;
+    stbuf->st_mode = S_IFDIR | 0755;
+    stbuf->st_nlink = 3;
     stbuf->st_uid = getuid();
     stbuf->st_gid = getgid();
     stbuf->st_mtime = init_time;
@@ -1269,6 +1268,24 @@ rf_read(const char *path, char *buf, size_t size, off_t offset,
   return 0;
 }
 
+static int
+rf_fsyncdir(const char * path, int p, struct fuse_file_info *fi)
+{
+  return 0;
+}
+
+static int 
+rf_utime(const char *path, struct utimbuf *ubuf)
+{
+  return 0;
+}
+
+static int
+rf_statfs(const char *path, struct statvfs *buf)
+{
+  return 0;
+}
+
 /* rf_oper
  *
  * Used for: FUSE utilizes this to call operations at the appropriate time.
@@ -1289,6 +1306,9 @@ static struct fuse_operations rf_oper = {
     .utime     = rf_touch,
     .read      = rf_read,
     .write     = rf_write,
+    .fsyncdir  = rf_fsyncdir,
+    .utime     = rf_utime,
+    .statfs    = rf_statfs,
 };
 
 /* rf_set_root
@@ -1330,38 +1350,6 @@ rf_handle_editor(VALUE self, VALUE troo) {
   return Qtrue;
 }
 
-char *valid_options[] = {
-  "default_permissions",
-  "allow_other",
-  "allow_root",
-  "direct_io",
-  "max_read=",
-  "fsname=",
-  NULL
-};
-
-int
-rf_valid_option(char *option) {
-  char opt[32];
-  char *ptr;
-  int i;
-
-  strncpy(opt,option,31);
-
-  if (ptr = strchr(opt,'*')) {
-    ptr++;
-    *ptr = '\0';
-  }
-
-  for (i=0;valid_options[i];i++) {
-    if (!strcasecmp(valid_options[i],opt)) {
-      return 1;
-    }
-  }
-
-  return 0;
-}
-
 /* rf_mount_to
  *
  * Used by: FuseFS.mount_to(dir)
@@ -1370,13 +1358,10 @@ rf_valid_option(char *option) {
  */
 VALUE
 rf_mount_to(int argc, VALUE *argv, VALUE self) {
-  int i;
-  char opts[1024];
-  char opts2[1024];
-  char *cur;
+  struct fuse_args *opts;
   VALUE mountpoint;
-
-  snprintf(opts,1024,"direct_io");
+  int i;
+  char *cur;
 
   if (self != cFuseFS) {
     rb_raise(cFSException,"Error: 'mount_to' called outside of FuseFS?!");
@@ -1390,17 +1375,18 @@ rf_mount_to(int argc, VALUE *argv, VALUE self) {
 
   mountpoint = argv[0];
 
-  Check_Type(mountpoint, T_STRING); 
+  Check_Type(mountpoint, T_STRING);
+  opts = ALLOC(struct fuse_args);
+  opts->argc = argc;
+  opts->argv = ALLOC_N(char *, opts->argc);
+  opts->allocated = 1;
+  
+  opts->argv[0] = strdup("-odirect_io");
 
-  for (i = 1;i < argc; i++) {
-    Check_Type(argv[i], T_STRING);
-    cur = STR2CSTR(argv[i]);
-    if (!rf_valid_option(cur)) {
-      rb_raise(rb_eArgError,"mount_under: \"%s\" - invalid argument.", cur);
-      return Qnil;
-    }
-    snprintf(opts2,1024,"%s,%s",opts,STR2CSTR(argv[i]));
-    strcpy(opts,opts2);
+  for (i = 1; i < argc; i++) {
+    cur = StringValuePtr(argv[i]);
+    opts->argv[i] = ALLOC_N(char, RSTRING(argv[i])->len + 2);
+    sprintf(opts->argv[i], "-o%s", cur);
   }
 
   rb_iv_set(cFuseFS,"@mountpoint",mountpoint);
