@@ -7,3 +7,5 @@ pkg
 *.bundle
 *.log
 Makefile
+pid
+hello
